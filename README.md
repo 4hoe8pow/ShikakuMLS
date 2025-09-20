@@ -55,58 +55,25 @@ ShikakuMLSは、iOS/Swift環境向けに設計された端末完結型E2EEライ
 ## 4. 使用例
 
 ```swift
-import ShikakuMLS
+let messenger = ShikakuMLS()
 
-@available(iOS 17.0, *)
-func sampleUsage() async throws {
-  let shikaku = ShikakuMLS()
+let alicePubKey = try await messenger.registerUser("alice")
+let bobPubKey   = try await messenger.registerUser("bob")
 
-  // Cohort作成
-  let memberPublicKeys = [Data()] // 公開鍵リスト
-  let initialState = Data()       // TreeKEM初期状態
-  let cohortResponse = try await shikaku.handler.createCohort(
-    memberPublicKeys: memberPublicKeys,
-    initialState: initialState
-  )
+let cohortID = try await messenger.createCohort(members: [alicePubKey, bobPubKey])
 
-  // メンバー追加
-  let newMemberPublicKey = Data()
-  let senderPrivateKey = Data()
-  let addMemberResponse = try await shikaku.handler.addMember(
-    cohortID: cohortResponse?.cohortID ?? "",
-    newMemberPublicKey: newMemberPublicKey,
-    senderPrivateKey: senderPrivateKey
-  )
+let ciphertext = try await messenger.sendMessage(
+    text: "Hello Bob!",
+    from: "alice",
+    to: bobPubKey
+)
 
-  // Cohort状態取得
-  let stateResponse = try await shikaku.handler.getCohortState(
-    cohortID: cohortResponse?.cohortID ?? ""
-  )
+let plaintext = try await messenger.receiveMessage(
+    ciphertext: ciphertext,
+    from: alicePubKey,
+    for: "bob"
+)
 
-  // 鍵生成
-  let keyPairResponse = try await shikaku.handler.generateKeyPair(
-    participantID: "test-participant"
-  )
+print(plaintext) // "Hello Bob!"
 
-  // メッセージ送信
-  let plaintext = "Hello!"
-  let recipientPublicKey = Data()
-  let contextInfo: [String: Any] = [
-    "ticketID": "TICKET1", "timestamp": Date()
-  ]
-  let sendResponse = try await shikaku.handler.sendMessage(
-    plaintext: plaintext,
-    senderPrivateKey: senderPrivateKey,
-    recipientPublicKey: recipientPublicKey,
-    contextInfo: contextInfo
-  )
-
-  // メッセージ復号
-  let decryptResponse = try await shikaku.handler.decryptMessage(
-    ciphertext: sendResponse?.ciphertext ?? Data(),
-    senderPublicKey: recipientPublicKey,
-    recipientPrivateKey: senderPrivateKey,
-    contextInfo: contextInfo
-  )
-}
 ```
