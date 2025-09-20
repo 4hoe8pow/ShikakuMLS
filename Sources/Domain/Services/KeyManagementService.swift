@@ -1,5 +1,6 @@
 import Foundation
 
+@available(macOS 10.15, *)
 final class KeyManagementService {
     public init() {}
 
@@ -12,7 +13,8 @@ final class KeyManagementService {
         return (pub, priv)
     }
 
-    public func rotateKey(participantID: String) -> (PublicKey, PrivateKey) {
+    public func rotateKeyPair(participantID: String) -> (PublicKey, PrivateKey)
+    {
         // 疑似鍵ローテーション
         let pub = PublicKey(rawValue: Data((participantID + "_rot").utf8))
         let priv = PrivateKey(

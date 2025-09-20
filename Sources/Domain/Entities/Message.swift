@@ -6,6 +6,7 @@
 //
 import Foundation
 
+@available(macOS 10.15, *)
 final class Message: Equatable {
     let messageID: UUID
     let sender: Participant

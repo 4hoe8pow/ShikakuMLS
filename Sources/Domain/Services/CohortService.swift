@@ -1,5 +1,6 @@
 import Foundation
 
+@available(macOS 10.15, *)
 final class CohortService {
     public init() {}
 
@@ -8,6 +9,7 @@ final class CohortService {
     {
         let members = memberPublicKeys.map { pk in
             Participant(
+                participantID: UUID(),
                 publicKey: PublicKey(rawValue: pk),
                 privateKey: PrivateKey(rawValue: Data())
             )
@@ -20,19 +22,16 @@ final class CohortService {
         cohort: Cohort,
         newMemberPublicKey: Data,
         senderPrivateKey: Data
-    )
-        -> Cohort
-    {
+    ) -> Cohort {
         let newMember = Participant(
+            participantID: UUID(),
             publicKey: PublicKey(rawValue: newMemberPublicKey),
             privateKey: PrivateKey(rawValue: senderPrivateKey)
         )
-        cohort.addMember(newMember)
+        var newMembers = cohort.members
+        newMembers.append(newMember)
         // CohortState更新は省略
-        return cohort
+        return Cohort(members: newMembers, state: cohort.state)
     }
 
-    public func getCohortState(cohort: Cohort) -> CohortState {
-        return cohort.state
-    }
 }

@@ -14,13 +14,4 @@ public struct CreateCohortRequestDTO {
         self.memberPublicKeys = memberPublicKeys
         self.initialState = initialState
     }
-
-    static func from(members: [Participant], initialState: CohortState)
-        -> CreateCohortRequestDTO
-    {
-        return CreateCohortRequestDTO(
-            memberPublicKeys: members.map { $0.publicKey.rawValue },
-            initialState: initialState.treeKEMData
-        )
-    }
 }

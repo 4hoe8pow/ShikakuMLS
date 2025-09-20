@@ -35,7 +35,12 @@ let package = Package(
         ),
         .testTarget(
             name: "ShikakuMLSTests",
-            dependencies: ["ShikakuMLS"]
+            dependencies: ["ShikakuMLS"],
+            path: "Tests/ShikakuMLSTests",
+            sources: [
+                "ShikakuMLSTests.swift",
+                "DomainServiceTests.swift"
+            ]
         ),
     ]
 )

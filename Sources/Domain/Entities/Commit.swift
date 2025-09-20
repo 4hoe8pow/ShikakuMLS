@@ -6,6 +6,8 @@
 //
 import Foundation
 
+@available(macOS 10.15, *)
+@available(iOS 13.0, *)
 final class Commit: Equatable {
     let commitID: UUID
     let committer: Participant

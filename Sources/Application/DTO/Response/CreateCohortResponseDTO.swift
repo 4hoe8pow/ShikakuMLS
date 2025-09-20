@@ -11,17 +11,9 @@ public struct CreateCohortResponseDTO {
     let memberPublicKeys: [Data]
     let state: Data
 
-    public init(cohortID: String, memberPublicKeys: [Data], state: Data) {
-        self.cohortID = cohortID
-        self.memberPublicKeys = memberPublicKeys
-        self.state = state
-    }
-
-    static func from(cohort: Cohort) -> CreateCohortResponseDTO {
-        return CreateCohortResponseDTO(
-            cohortID: cohort.cohortID.uuidString,
-            memberPublicKeys: cohort.members.map { $0.publicKey.rawValue },
-            state: cohort.state.treeKEMData
-        )
+    init(cohort: Cohort) {
+        self.cohortID = cohort.cohortID.uuidString
+        self.memberPublicKeys = cohort.members.map { $0.publicKey.rawValue }
+        self.state = cohort.state.treeKEMData
     }
 }

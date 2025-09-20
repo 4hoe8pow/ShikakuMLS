@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 
+@available(macOS 10.15, *)
 @available(iOS 17.0, *)
 @Observable
 final class CohortInteractor: CohortInputPort {
@@ -26,27 +27,19 @@ final class CohortInteractor: CohortInputPort {
             initialState: request.initialState
         )
         self.cohort = cohort
-        let response = CreateCohortResponseDTO(
-            cohortID: cohort.cohortID.uuidString,
-            memberPublicKeys: cohort.members.map { $0.publicKey.rawValue },
-            state: cohort.state.treeKEMData
-        )
+        let response = CreateCohortResponseDTO(cohort: cohort)
         outputPort.didCreateCohort(response: response)
     }
 
     func addMember(request: AddMemberRequestDTO) async throws {
         guard let cohort = self.cohort else { return }
-        let updated = cohortService.addMember(
+        let updatedCohort = cohortService.addMember(
             cohort: cohort,
             newMemberPublicKey: request.newMemberPublicKey,
             senderPrivateKey: request.senderPrivateKey
         )
-        self.cohort = updated
-        let response = AddMemberResponseDTO(
-            cohortID: updated.cohortID.uuidString,
-            memberPublicKeys: updated.members.map { $0.publicKey.rawValue },
-            state: updated.state.treeKEMData
-        )
+        self.cohort = updatedCohort
+        let response = AddMemberResponseDTO(cohort: updatedCohort)
         outputPort.didAddMember(response: response)
     }
 
@@ -56,11 +49,7 @@ final class CohortInteractor: CohortInputPort {
 
     func getCohortState(request: GetCohortStateRequestDTO) async throws {
         guard let cohort = self.cohort else { return }
-        let state = cohortService.getCohortState(cohort: cohort)
-        let response = GetCohortStateResponseDTO(
-            cohortID: cohort.cohortID.uuidString,
-            state: state.treeKEMData
-        )
+        let response = GetCohortStateResponseDTO(cohort: cohort)
         outputPort.didUpdateCohortState(response: response)
     }
 }

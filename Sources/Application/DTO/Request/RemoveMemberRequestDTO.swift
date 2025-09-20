@@ -16,14 +16,4 @@ public struct RemoveMemberRequestDTO {
         self.removedMemberPublicKey = removedMemberPublicKey
         self.senderPrivateKey = senderPrivateKey
     }
-
-    static func from(cohort: Cohort, removedMember: Participant, sender: Participant)
-        -> RemoveMemberRequestDTO
-    {
-        return RemoveMemberRequestDTO(
-            cohortID: cohort.cohortID.uuidString,
-            removedMemberPublicKey: removedMember.publicKey.rawValue,
-            senderPrivateKey: sender.privateKey.rawValue
-        )
-    }
 }

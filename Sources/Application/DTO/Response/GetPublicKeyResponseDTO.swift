@@ -10,15 +10,8 @@ public struct GetPublicKeyResponseDTO {
     let participantID: String
     let publicKey: Data
 
-    public init(participantID: String, publicKey: Data) {
-        self.participantID = participantID
-        self.publicKey = publicKey
-    }
-
-    static func from(participant: Participant) -> GetPublicKeyResponseDTO {
-        return GetPublicKeyResponseDTO(
-            participantID: participant.participantID.uuidString,
-            publicKey: participant.publicKey.rawValue
-        )
+    init(participant: Participant) {
+        self.participantID = participant.participantID.uuidString
+        self.publicKey = participant.publicKey.rawValue
     }
 }

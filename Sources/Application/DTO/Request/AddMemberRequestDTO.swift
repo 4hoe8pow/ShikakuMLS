@@ -16,14 +16,4 @@ public struct AddMemberRequestDTO {
         self.newMemberPublicKey = newMemberPublicKey
         self.senderPrivateKey = senderPrivateKey
     }
-
-    static func from(cohort: Cohort, newMember: Participant, sender: Participant)
-        -> AddMemberRequestDTO
-    {
-        return AddMemberRequestDTO(
-            cohortID: cohort.cohortID.uuidString,
-            newMemberPublicKey: newMember.publicKey.rawValue,
-            senderPrivateKey: sender.privateKey.rawValue
-        )
-    }
 }

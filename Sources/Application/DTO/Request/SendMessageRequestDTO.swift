@@ -8,28 +8,22 @@ import Foundation
 
 public struct SendMessageRequestDTO {
     let plaintext: String
+    let senderPublicKey: Data
     let senderPrivateKey: Data
     let recipientPublicKey: Data
     let contextInfo: [String: Any]
 
     public init(
-        plaintext: String, senderPrivateKey: Data, recipientPublicKey: Data,
+        plaintext: String,
+        senderPublicKey: Data,
+        senderPrivateKey: Data,
+        recipientPublicKey: Data,
         contextInfo: [String: Any]
     ) {
         self.plaintext = plaintext
+        self.senderPublicKey = senderPublicKey
         self.senderPrivateKey = senderPrivateKey
         self.recipientPublicKey = recipientPublicKey
         self.contextInfo = contextInfo
-    }
-
-    static func from(message: Message, sender: Participant, recipient: Participant)
-        -> SendMessageRequestDTO
-    {
-        return SendMessageRequestDTO(
-            plaintext: "",  // Messageから平文は取得不可のため空文字
-            senderPrivateKey: sender.privateKey.rawValue,
-            recipientPublicKey: recipient.publicKey.rawValue,
-            contextInfo: message.contextInfo.toDictionary()
-        )
     }
 }

@@ -6,6 +6,7 @@
 //
 import Foundation
 
+@available(macOS 10.15, *)
 final class Cohort: Equatable {
     let cohortID: UUID
     private(set) var members: [Participant]

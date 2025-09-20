@@ -14,11 +14,4 @@ public struct RotateKeyRequestDTO {
         self.participantID = participantID
         self.currentPrivateKey = currentPrivateKey
     }
-
-    internal static func from(participant: Participant) -> RotateKeyRequestDTO {
-        return RotateKeyRequestDTO(
-            participantID: participant.participantID.uuidString,
-            currentPrivateKey: participant.privateKey.rawValue
-        )
-    }
 }

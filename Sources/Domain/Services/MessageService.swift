@@ -1,29 +1,54 @@
 import Foundation
 
+@available(macOS 10.15, *)
 final class MessageService {
     public init() {}
 
-    public func sendMessage(
+    // 1:1暗号化
+    public func encrypt(
         plaintext: String,
-        senderPrivateKey: Data,
-        recipientPublicKey: Data,
-        contextInfo: [String: Any]
+        sender: Participant,
+        recipient: Participant,
+        context: ContextInfo
     ) -> CipherText {
-        // 疑似暗号化
         let data = Data((plaintext + "_encrypted").utf8)
         return CipherText(rawValue: data)
     }
 
-    public func decryptMessage(
-        ciphertext: Data,
-        senderPublicKey: Data,
-        recipientPrivateKey: Data,
-        contextInfo: [String: Any]
+    public func decrypt(
+        ciphertext: CipherText,
+        sender: Participant,
+        recipient: Participant,
+        context: ContextInfo
     ) -> String {
-        // 疑似復号
-        return String(data: ciphertext, encoding: .utf8)?.replacingOccurrences(
-            of: "_encrypted",
-            with: ""
-        ) ?? ""
+        return String(data: ciphertext.rawValue, encoding: .utf8)?
+            .replacingOccurrences(
+                of: "_encrypted",
+                with: ""
+            ) ?? ""
+    }
+
+    // Cohort暗号化
+    public func encryptInCohort(
+        plaintext: String,
+        sender: Participant,
+        cohort: Cohort,
+        context: ContextInfo
+    ) -> CipherText {
+        let data = Data((plaintext + "_encrypted").utf8)
+        return CipherText(rawValue: data)
+    }
+
+    public func decryptInCohort(
+        ciphertext: CipherText,
+        recipient: Participant,
+        cohort: Cohort,
+        context: ContextInfo
+    ) -> String {
+        return String(data: ciphertext.rawValue, encoding: .utf8)?
+            .replacingOccurrences(
+                of: "_encrypted",
+                with: ""
+            ) ?? ""
     }
 }

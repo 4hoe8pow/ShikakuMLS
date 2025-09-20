@@ -12,8 +12,4 @@ public struct GenerateKeyPairRequestDTO {
     public init(participantID: String) {
         self.participantID = participantID
     }
-
-    static func from(participant: Participant) -> GenerateKeyPairRequestDTO {
-        return GenerateKeyPairRequestDTO(participantID: participant.participantID.uuidString)
-    }
 }

@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 
+@available(macOS 10.15, *)
 @available(iOS 17.0, *)
 @Observable
 final class KeyManagementInteractor: KeyManagementInputPort {
@@ -23,11 +24,12 @@ final class KeyManagementInteractor: KeyManagementInputPort {
         let (pub, priv) = keyService.generateKeyPair(
             participantID: request.participantID
         )
-        let response = GenerateKeyPairResponseDTO(
-            participantID: request.participantID,
-            publicKey: pub.rawValue,
-            privateKey: priv.rawValue
+        let participant = Participant(
+            participantID: UUID(),
+            publicKey: pub,
+            privateKey: priv
         )
+        let response = GenerateKeyPairResponseDTO(participant: participant)
         outputPort.didGenerateKeyPair(response: response)
     }
 
@@ -36,14 +38,15 @@ final class KeyManagementInteractor: KeyManagementInputPort {
     }
 
     func rotateKey(request: RotateKeyRequestDTO) async throws {
-        let (pub, priv) = keyService.rotateKey(
+        let (pub, priv) = keyService.rotateKeyPair(
             participantID: request.participantID
         )
-        let response = RotateKeyResponseDTO(
-            participantID: request.participantID,
-            publicKey: pub.rawValue,
-            privateKey: priv.rawValue
+        let participant = Participant(
+            participantID: UUID(),
+            publicKey: pub,
+            privateKey: priv
         )
+        let response = RotateKeyResponseDTO(participant: participant)
         outputPort.didRotateKey(response: response)
     }
 }

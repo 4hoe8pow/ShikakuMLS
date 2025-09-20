@@ -14,18 +14,28 @@ public final class CohortController {
         self.inputPort = inputPort
     }
 
-    public func createCohort(memberPublicKeys: [Data], initialState: Data) async throws {
+    public func createCohort(memberPublicKeys: [Data], initialState: Data)
+        async throws
+    {
         let request = CreateCohortRequestDTO(
-            memberPublicKeys: memberPublicKeys, initialState: initialState)
+            memberPublicKeys: memberPublicKeys,
+            initialState: initialState
+        )
         try await inputPort.createCohort(request: request)
     }
 
-    public func addMember(cohortID: String, newMemberPublicKey: Data, senderPrivateKey: Data)
+    public func addMember(
+        cohortID: String,
+        newMemberPublicKey: Data,
+        senderPrivateKey: Data
+    )
         async throws
     {
         let request = AddMemberRequestDTO(
-            cohortID: cohortID, newMemberPublicKey: newMemberPublicKey,
-            senderPrivateKey: senderPrivateKey)
+            cohortID: cohortID,
+            newMemberPublicKey: newMemberPublicKey,
+            senderPrivateKey: senderPrivateKey
+        )
         try await inputPort.addMember(request: request)
     }
 

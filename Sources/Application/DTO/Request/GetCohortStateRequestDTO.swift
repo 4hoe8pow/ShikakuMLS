@@ -12,8 +12,4 @@ public struct GetCohortStateRequestDTO {
     public init(cohortID: String) {
         self.cohortID = cohortID
     }
-
-    static func from(cohort: Cohort) -> GetCohortStateRequestDTO {
-        return GetCohortStateRequestDTO(cohortID: cohort.cohortID.uuidString)
-    }
 }

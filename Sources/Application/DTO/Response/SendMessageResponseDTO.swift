@@ -12,24 +12,10 @@ public struct SendMessageResponseDTO {
     let recipientPublicKey: Data
     let contextInfo: [String: Any]
 
-    public init(
-        ciphertext: Data, senderPublicKey: Data, recipientPublicKey: Data,
-        contextInfo: [String: Any]
-    ) {
-        self.ciphertext = ciphertext
-        self.senderPublicKey = senderPublicKey
-        self.recipientPublicKey = recipientPublicKey
-        self.contextInfo = contextInfo
-    }
-
-    static func from(message: Message, sender: Participant, recipient: Participant)
-        -> SendMessageResponseDTO
-    {
-        return SendMessageResponseDTO(
-            ciphertext: message.cipherText.rawValue,
-            senderPublicKey: sender.publicKey.rawValue,
-            recipientPublicKey: recipient.publicKey.rawValue,
-            contextInfo: message.contextInfo.toDictionary()
-        )
+    init(message: Message, sender: Participant, recipient: Participant) {
+        self.ciphertext = message.cipherText.rawValue
+        self.senderPublicKey = sender.publicKey.rawValue
+        self.recipientPublicKey = recipient.publicKey.rawValue
+        self.contextInfo = message.contextInfo.toDictionary()
     }
 }

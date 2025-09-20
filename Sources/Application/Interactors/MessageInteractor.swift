@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 
+@available(macOS 10.15, *)
 @available(iOS 17.0, *)
 @Observable
 final class MessageInteractor: MessageInputPort {
@@ -20,33 +21,73 @@ final class MessageInteractor: MessageInputPort {
     private let messageService = MessageService()
 
     func sendMessage(request: SendMessageRequestDTO) async throws {
-        let cipherText = messageService.sendMessage(
+        let sender = Participant(
+            participantID: UUID(),
+            publicKey: PublicKey(rawValue: request.senderPublicKey),
+            privateKey: PrivateKey(rawValue: request.senderPrivateKey)
+        )
+        let recipient = Participant(
+            participantID: UUID(),
+            publicKey: PublicKey(rawValue: request.recipientPublicKey),
+            privateKey: PrivateKey(rawValue: Data())  // dummy
+        )
+        let contextInfo: ContextInfo
+        let dict = request.contextInfo
+        if let ticketID = dict["ticketID"] as? String,
+            let timestamp = dict["timestamp"] as? Date
+        {
+            contextInfo = ContextInfo(ticketID: ticketID, timestamp: timestamp)
+        } else {
+            contextInfo = ContextInfo(ticketID: "", timestamp: Date())
+        }
+        let cipherText = messageService.encrypt(
             plaintext: request.plaintext,
-            senderPrivateKey: request.senderPrivateKey,
-            recipientPublicKey: request.recipientPublicKey,
-            contextInfo: request.contextInfo
+            sender: sender,
+            recipient: recipient,
+            context: contextInfo
+        )
+        let message = Message(
+            sender: sender,
+            cipherText: cipherText,
+            contextInfo: contextInfo
         )
         let response = SendMessageResponseDTO(
-            ciphertext: cipherText.rawValue,
-            senderPublicKey: request.senderPrivateKey,  // 仕様上本来はPublicKey
-            recipientPublicKey: request.recipientPublicKey,
-            contextInfo: request.contextInfo
+            message: message,
+            sender: sender,
+            recipient: recipient
         )
         outputPort.didSendMessage(response: response)
     }
 
     func decryptMessage(request: DecryptMessageRequestDTO) async throws {
-        let plain = messageService.decryptMessage(
-            ciphertext: request.ciphertext,
-            senderPublicKey: request.senderPublicKey,
-            recipientPrivateKey: request.recipientPrivateKey,
-            contextInfo: request.contextInfo
+        let sender = Participant(
+            participantID: UUID(),
+            publicKey: PublicKey(rawValue: request.senderPublicKey),
+            privateKey: PrivateKey(rawValue: Data())  // dummy
+        )
+        let recipient = Participant(
+            participantID: UUID(),
+            publicKey: PublicKey(rawValue: Data()),  // dummy
+            privateKey: PrivateKey(rawValue: request.recipientPrivateKey)
+        )
+        let contextInfo: ContextInfo
+        let dict = request.contextInfo
+        if let ticketID = dict["ticketID"] as? String,
+            let timestamp = dict["timestamp"] as? Date
+        {
+            contextInfo = ContextInfo(ticketID: ticketID, timestamp: timestamp)
+        } else {
+            contextInfo = ContextInfo(ticketID: "", timestamp: Date())
+        }
+
+        let message = Message(
+            sender: sender,
+            cipherText: CipherText(rawValue: request.ciphertext),
+            contextInfo: contextInfo
         )
         let response = DecryptMessageResponseDTO(
-            plaintext: plain,
-            senderPublicKey: request.senderPublicKey,
-            recipientPublicKey: request.recipientPrivateKey,  // 仕様上本来はPublicKey
-            contextInfo: request.contextInfo
+            message: message,
+            recipient: recipient
         )
         outputPort.didDecryptMessage(response: response)
     }

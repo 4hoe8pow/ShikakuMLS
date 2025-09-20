@@ -6,6 +6,7 @@
 //
 import Foundation
 
+@available(macOS 10.15, *)
 final class Participant: Equatable {
     let participantID: UUID
     let publicKey: PublicKey

@@ -15,22 +15,34 @@ public final class MessageController {
     }
 
     public func sendMessage(
-        plaintext: String, senderPrivateKey: Data, recipientPublicKey: Data,
+        plaintext: String,
+        senderPublicKey: Data,
+        senderPrivateKey: Data,
+        recipientPublicKey: Data,
         contextInfo: [String: Any]
     ) async throws {
         let request = SendMessageRequestDTO(
-            plaintext: plaintext, senderPrivateKey: senderPrivateKey,
-            recipientPublicKey: recipientPublicKey, contextInfo: contextInfo)
+            plaintext: plaintext,
+            senderPublicKey: senderPublicKey,
+            senderPrivateKey: senderPrivateKey,
+            recipientPublicKey: recipientPublicKey,
+            contextInfo: contextInfo
+        )
         try await inputPort.sendMessage(request: request)
     }
 
     public func decryptMessage(
-        ciphertext: Data, senderPublicKey: Data, recipientPrivateKey: Data,
+        ciphertext: Data,
+        senderPublicKey: Data,
+        recipientPrivateKey: Data,
         contextInfo: [String: Any]
     ) async throws {
         let request = DecryptMessageRequestDTO(
-            ciphertext: ciphertext, senderPublicKey: senderPublicKey,
-            recipientPrivateKey: recipientPrivateKey, contextInfo: contextInfo)
+            ciphertext: ciphertext,
+            senderPublicKey: senderPublicKey,
+            recipientPrivateKey: recipientPrivateKey,
+            contextInfo: contextInfo
+        )
         try await inputPort.decryptMessage(request: request)
     }
 }

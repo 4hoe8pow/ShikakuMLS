@@ -12,8 +12,4 @@ public struct GetPublicKeyRequestDTO {
     public init(participantID: String) {
         self.participantID = participantID
     }
-
-    static func from(participant: Participant) -> GetPublicKeyRequestDTO {
-        return GetPublicKeyRequestDTO(participantID: participant.participantID.uuidString)
-    }
 }
