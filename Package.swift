@@ -10,13 +10,28 @@ let package = Package(
         .library(
             name: "ShikakuMLS",
             targets: ["ShikakuMLS"]
-        ),
+        )
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ShikakuMLS"
+            name: "ShikakuMLS",
+            dependencies: [],
+            path: "Sources",
+            sources: [
+                "ShikakuMLS",
+                "Presentation/Controllers",
+                "Presentation/Presenters",
+                "Presentation/Handlers",
+                "Application",
+                "Application/DTO/Request",
+                "Application/DTO/Response",
+                "Application/Interactors",
+                "Domain/Entities",
+                "Domain/Services",
+                "Domain/Values",
+            ]
         ),
         .testTarget(
             name: "ShikakuMLSTests",
